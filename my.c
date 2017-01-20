@@ -2,6 +2,7 @@
     //I can make shorter slassify() with clear str1
     //printf("%s\n",__func__);
     //#define checkOpe(X) _Generic((X),char :Ope,char *: Ope_p)(X)
+    // make calc() eval() to return void
 //Done
     //char cntOpe(char c){
     //count the brackets number
@@ -9,8 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "my.h"
+#include "digit.h"
 
 int main(int argc,char *argv[]){
     char str[128];
@@ -31,114 +34,85 @@ int main(int argc,char *argv[]){
     return 0;
 }
 
-char *eval(char *exp){
+void eval(char *exp){
     int c=0,c0=0,i=0,n,l;
+	//i: length of tmp 
     char *tmp,*endp,*result;
+	//tmp:strings to eval
     tmp=malloc((int)strlen(exp));
-    ope_t cnt;
+    ope_t cnt=cntOpe(exp);
+    l=0; //(int)strlen(exp);
+    printf("%s\texp=%s size=%d\n",__func__,exp,l);
     while(0){
 recheck:
         printf("recheck\n");
         exp=home(exp);
     }
-    l=(int)strlen(exp);
-    printf("%s\texp=%s size=%d\n",__func__,exp,l);
-    if(cntOpe(exp,cnt).bracket<=2){
-        //when the exp is the minmum
-        return calc(exp);
+    if(cnt.bracket==0){
+        calc(exp);
     }else{
         do{
-            c0=c;
-            *(tmp++)=*exp;
             i++;
             if(*exp=='('){
-                c++;
-                i=1;
+                i=0;
             }
             if(*exp==')'){
-                result=eval(tmp);
-                // recrusion '(' , ')' exp to eval()
-//                printf("insert : bp=%c,ap=%c,str=%s\n",*(exp-i),*(exp+1),result);
-                Insert((exp-i),(exp+1),result);
-                /***after insert you should reentry this function in order to recount 'i','tmp' and so on.***/
+		printf("tmp=%s\n",tmp-i+1);
+                eval(tmp-i+1);
                 goto recheck;
-                c--;
             }
+            *(tmp++)=*exp;
             exp++;
 //            printf("i=%d c0=%d c=%d *exp=%c *tmp=%s\n",i,c0,c,*(exp++),(tmp-i));
-        }while(/*!(c==0 && c0==1) &&*/ *exp!='\0');
+        }while(exp!='\0');
     }
-//    printf("exp :%p\n",--exp);
 }
-char* calc(char *exp){
+
+void calc(char *exp){
     printf("%s exp=%s\n",__func__,exp);
-//    char *str,*tmp,result="100";
-    char *tmp;	
-    int pri;
+//    printf("%c,%d\n",*exp,(int)strlen(exp));
+    int pri,s=0,n0,n1,tmp=0;
 	//s : state of *exp
 	//pri : Number of priority operation(*,/)          
-    ope_t c; 
+    char *exp0;
+    ope_t c;//=cntOpe(exp); 
         // ---stack ope then return result---
-    while(cntOpe(exp,c).sum){
+//    while(sum && *exp){
+    do{
+        c=cntOpe(exp); 
+	printf("exp= %c\n",*exp);
 	pri=c.multi+c.div;
-	if('0'<*exp  && *exp<'9'){
-		*tmp=*exp;	
-		tmp++;
-	}else{
-		a=atoi(tmp);
-//		b=;
+	if(('0'<*exp  && *exp<'9') && s==0){
+		s=1;
+		exp0=exp;
+		n0=atoi(exp);
+	}else if(Ope(*exp)){
+//		printf("pri=%d",pri);
+		s=0;
+		n1=atoi(exp+1);
 		if(*exp=='*' ){
-		
+			tmp=n0*n1;
 		}else if( *exp=='/'){
-
-		}else if(*exp=='+' && !pri){
-		
+			tmp=n0/n1;
+		}else if(*exp=='+' && pri==0){
+			tmp=n0+n1;
 		}else if(*exp=='-' && !pri){
-
+			tmp=n0-n1;
 		}
+		digit(n1);
+		printf("%d %c %d = %d\n",n0,*exp,n1,tmp);
+//		printf("Insert : n0=%d n1=%d tmp=%d\n",n0,n1,tmp);
+//		Insert(exp0,,(char)tmp)
 	}
 	exp++;
-    }
-    return result;
-}
-/*
-int* numify(char *exp){
-    int *n,c=0,c0=0;
-    char *tmp;
-    tmp=malloc(128);
-    while(*exp){
-        if(checkNum(*exp)){
-            //start of a number
-            *tmp=*exp;
-            tmp++;
-        }else if(!checkNum(*exp)){ //out of a number *tmp='\0'; tmp=home(tmp); *n=atoi(tmp); printf("num=%d\n",*n); n++;
-        }
-        c0=c;
-        exp++;
-    }
-    return n;
+    }while(c.sum && *exp);
+//    return result;
 }
 
-void hoge(char *exp){
-	int a,b;
-	//left and right value
-	value(exp);
-	if(*exp=='*'){
-		return a*b;	
-	}
-}
-int* value(char *exp){
-	//return left and right value
-	int *n;
-
-	return n;
-}
-*/
 int Ope_p(char *c){
     printf("%s\n",__func__);
 }
 int Ope(char c){
-//    printf("%s\n",__func__);
     if(c=='+')  return 1;
     if(c=='-')  return 1;
     if(c=='*')  return 1;
@@ -150,11 +124,12 @@ char checkNum(char c){
     if('0'<c && c<'9') return c;
     return '\0';
 }
-ope_t cntOpe(char *exp,ope_t cnt){
+ope_t cntOpe(char *exp/*,ope_t cnt*/){
     //check whether or not exp has any operator
         //if no ,return to eval
         //else if find '*','/' then find'+','-'
-    printf("%s\n",__func__);
+//    printf("%s\n",__func__);
+    ope_t cnt={};
     while(*exp){
         if(*exp=='+') cnt.add++;
         if(*exp=='-') cnt.sub++;
@@ -166,18 +141,12 @@ ope_t cntOpe(char *exp,ope_t cnt){
 	cnt.bracket=cnt.right+cnt.left;
         exp++;
     }
+//    printf("%s\n",__func__);
     return cnt;
 }
-/*
-int cntBracket(char *exp){
-    int cnt=0;
-    while(*exp){
-        if(*exp=='(' || *exp==')'){
-            cnt++;
-        }
-        exp++;
-    }
-//    printf("%s %s",__func__,exp);
-    return cnt;
+
+int digit(int n){
+	double i=1;
+	while( n/=pow(10,(double)i++) );
+	return i;
 }
-*/
