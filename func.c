@@ -8,15 +8,16 @@ char* home(char *str){
     return str;
 }
 void Insert(char *bp,char *ap,char *str){
-//    printf("%s %c %c %s\n",__func__,*bp,*ap,str);
-    bp++;
-    while(*str){
+    printf("%sbp=%cap=%cstr=%s\n",__func__,*bp,*ap,str);
+    char *bp0=bp;
+    bp++; while(*str){
         *(bp++)=*(str++);
     }
     while(*ap){
         *(bp++)=*(ap++);
     }
     *bp='\0';
+    printf("Insert result : %s\n",bp0);
 }
 int check(char *exp){
 //    char token[128]="default";
