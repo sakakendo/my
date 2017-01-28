@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 
+#include "eval.h"
 #include "my.h"
 #include "digit.h"
 
@@ -32,6 +33,15 @@ int main(int argc,char *argv[]){
 //    printf("exp=%s,eval result=%s\n",str,eval(str));
     eval(str);
     return 0;
+}
+int dbg(/*const char *exp*/){
+#ifdef DBG
+	printf( "dbg mode");
+	printf( "undbg mode");
+#endif //__DBG __ 
+#ifndef DBG
+	printf( "undbg mode");
+#endif //__DBG __ 
 }
 
 void eval(char *exp){
@@ -56,8 +66,8 @@ recheck:
             if(*exp=='('){
                 i=0;
             }
-            if(*exp==')'){
-		printf("tmp=%s\n",tmp-i+1);
+			if(*exp==')'){
+				printf("tmp=%s\n",tmp-i+1);
                 eval(tmp-i+1);
                 goto recheck;
             }
@@ -67,7 +77,7 @@ recheck:
         }while(exp!='\0');
     }
 }
-
+/*
 void calc(char *exp){
 //    printf("%s exp=%s\n",__func__,exp);
 //    printf("%c,%d\n",*exp,(int)strlen(exp));
@@ -75,14 +85,20 @@ void calc(char *exp){
 	//s : state of *exp
 	//pri : Number of priority operation(*,/)          
     char *exp0;
+	char *head=exp;
     char str[128];
     ope_t c;//=cntOpe(exp); 
         // ---stack ope then return result---
 //    while(sum && *exp){
-    do{
-        c=cntOpe(exp); 
-        printf("exp= %c\n",*exp);
-        pri=c.multi+c.div;
+	while( 0){
+init:
+		exp=head;
+		printf("%d head=%s\n",__LINE__,head);
+	}
+	c=cntOpe(exp); 
+	pri=c.multi+c.div;
+	//        printf("exp= %c\n",*exp);
+	do{
         if(('0'<*exp  && *exp<'9') && s==0){
             s=1;
             exp0=exp;
@@ -107,12 +123,14 @@ void calc(char *exp){
             sprintf(str,"%d",tmp);
             Insert(exp0-1,exp+digit(n1)+1,str);
             printf("%s",exp0);
+			goto init;
         }
         exp++;
     }while(c.sum && *exp);
     //    return result;
 }
-
+*/
+/*
 int Ope_p(char *c){
     printf("%s\n",__func__);
 }
@@ -128,7 +146,7 @@ char checkNum(char c){
     if('0'<c && c<'9') return c;
     return '\0';
 }
-ope_t cntOpe(char *exp/*,ope_t cnt*/){
+ope_t cntOpe(char *exp){
     //check whether or not exp has any operator
         //if no ,return to eval
         //else if find '*','/' then find'+','-'
@@ -154,3 +172,4 @@ int digit(int n){
 	while( n/=pow(10,(double)i++) );
 	return i-1;
 }
+*/
