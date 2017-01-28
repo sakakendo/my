@@ -12,6 +12,7 @@
 #include <string.h>
 #include <math.h>
 
+#include "eval.h"
 #include "my.h"
 #include "digit.h"
 
@@ -33,6 +34,15 @@ int main(int argc,char *argv[]){
     eval(str);
     return 0;
 }
+int dbg(/*const char *exp*/){
+#ifdef DBG
+	printf( "dbg mode");
+	printf( "undbg mode");
+#endif //__DBG __ 
+#ifndef DBG
+	printf( "undbg mode");
+#endif //__DBG __ 
+}
 
 void eval(char *exp){
     int c=0,c0=0,i=0,n,l;
@@ -45,7 +55,7 @@ void eval(char *exp){
     printf("%s\texp=%s size=%d\n",__func__,exp,l);
     while(0){
 recheck:
-        printf("recheck\n");
+//        printf("recheck\n");
         exp=home(exp);
     }
     if(cnt.bracket==0){
@@ -56,8 +66,8 @@ recheck:
             if(*exp=='('){
                 i=0;
             }
-            if(*exp==')'){
-		printf("tmp=%s\n",tmp-i+1);
+			if(*exp==')'){
+				printf("tmp=%s\n",tmp-i+1);
                 eval(tmp-i+1);
                 goto recheck;
             }
@@ -67,48 +77,60 @@ recheck:
         }while(exp!='\0');
     }
 }
-
+/*
 void calc(char *exp){
-    printf("%s exp=%s\n",__func__,exp);
+//    printf("%s exp=%s\n",__func__,exp);
 //    printf("%c,%d\n",*exp,(int)strlen(exp));
     int pri,s=0,n0,n1,tmp=0;
 	//s : state of *exp
 	//pri : Number of priority operation(*,/)          
     char *exp0;
+	char *head=exp;
+    char str[128];
     ope_t c;//=cntOpe(exp); 
         // ---stack ope then return result---
 //    while(sum && *exp){
-    do{
-        c=cntOpe(exp); 
-	printf("exp= %c\n",*exp);
-	pri=c.multi+c.div;
-	if(('0'<*exp  && *exp<'9') && s==0){
-		s=1;
-		exp0=exp;
-		n0=atoi(exp);
-	}else if(Ope(*exp)){
-//		printf("pri=%d",pri);
-		s=0;
-		n1=atoi(exp+1);
-		if(*exp=='*' ){
-			tmp=n0*n1;
-		}else if( *exp=='/'){
-			tmp=n0/n1;
-		}else if(*exp=='+' && pri==0){
-			tmp=n0+n1;
-		}else if(*exp=='-' && !pri){
-			tmp=n0-n1;
-		}
-		digit(n1);
-		printf("%d %c %d = %d\n",n0,*exp,n1,tmp);
-//		printf("Insert : n0=%d n1=%d tmp=%d\n",n0,n1,tmp);
-//		Insert(exp0,,(char)tmp)
+	while( 0){
+init:
+		exp=head;
+		printf("%d head=%s\n",__LINE__,head);
 	}
-	exp++;
+	c=cntOpe(exp); 
+	pri=c.multi+c.div;
+	//        printf("exp= %c\n",*exp);
+	do{
+        if(('0'<*exp  && *exp<'9') && s==0){
+            s=1;
+            exp0=exp;
+            n0=atoi(exp);
+        }else if(Ope(*exp)){
+            //		printf("pri=%d",pri);
+            s=0;
+            n1=atoi(exp+1);
+            if(*exp=='*' ){
+                tmp=n0*n1;
+            }else if( *exp=='/'){
+                tmp=n0/n1;
+            }else if(*exp=='+' && pri==0){
+                tmp=n0+n1;
+            }else if(*exp=='-' && !pri){
+                tmp=n0-n1;
+            }
+//            printf("%d %c %d = %d\n",n0,*exp,n1,tmp);
+//            printf("exp : %p  %c exp0: %p : %c n0 : %d n1 : %d\n"
+//                    ,exp,*exp,exp0,*exp0,digit(n0),digit(n1));
+            printf("Insert : n0=%d n1=%d tmp=%d\n",n0,n1,tmp);
+            sprintf(str,"%d",tmp);
+            Insert(exp0-1,exp+digit(n1)+1,str);
+            printf("%s",exp0);
+			goto init;
+        }
+        exp++;
     }while(c.sum && *exp);
-//    return result;
+    //    return result;
 }
-
+*/
+/*
 int Ope_p(char *c){
     printf("%s\n",__func__);
 }
@@ -124,7 +146,7 @@ char checkNum(char c){
     if('0'<c && c<'9') return c;
     return '\0';
 }
-ope_t cntOpe(char *exp/*,ope_t cnt*/){
+ope_t cntOpe(char *exp){
     //check whether or not exp has any operator
         //if no ,return to eval
         //else if find '*','/' then find'+','-'
@@ -148,5 +170,6 @@ ope_t cntOpe(char *exp/*,ope_t cnt*/){
 int digit(int n){
 	double i=1;
 	while( n/=pow(10,(double)i++) );
-	return i;
+	return i-1;
 }
+*/

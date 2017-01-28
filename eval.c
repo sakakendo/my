@@ -1,61 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "my.h"
-
-char* home(char *str){
-    while(*(--str));
-    (str++);
-    return str;
-}
-void Insert(char *bp,char *ap,char *str){
-    printf("%sbp=%cap=%cstr=%s\n",__func__,*bp,*ap,str);
-    char *bp0=bp;
-    bp++; while(*str){
-        *(bp++)=*(str++);
-    }
-    while(*ap){
-        *(bp++)=*(ap++);
-    }
-    *bp='\0';
-    printf("Insert result : %s\n",bp0);
-}
-int Ope_p(char *c){
-    printf("%s\n",__func__);
-}
-int Ope(char c){
-    if(c=='+')  return 1;
-    if(c=='-')  return 1;
-    if(c=='*')  return 1;
-    if(c=='/')  return 1;
-    return 0;
-}
-
-char checkNum(char c){
-    if('0'<c && c<'9') return c;
-    return '\0';
-}
-
-ope_t cntOpe(char *exp/*,ope_t cnt*/){
-    //check whether or not exp has any operator
-        //if no ,return to eval
-        //else if find '*','/' then find'+','-'
-//    printf("%s\n",__func__);
-    ope_t cnt={};
-    while(*exp){
-        if(*exp=='+') cnt.add++;
-        if(*exp=='-') cnt.sub++;
-        if(*exp=='*') cnt.multi++;
-        if(*exp=='/') cnt.div++;
-        cnt.sum=(cnt.add+cnt.sub+cnt.multi+cnt.div);
-        if(*exp=='(') cnt.left++;
-        if(*exp==')') cnt.right++;
-	cnt.bracket=cnt.right+cnt.left;
-        exp++;
-    }
-//    printf("%s\n",__func__);
-    return cnt;
-}
-/*** eval() 
+#include <eval.h>
+/*** eval() ***/
 int check(char *exp){
 //    char token[128]="default";
     int class,class0=-1;
@@ -97,7 +41,7 @@ int check(char *exp){
     }
     return 1;
 }
-int classify(char **str){
+int classify(char **str/*,char *str1*/){
 //    printf("%s\n",__func__);
 //    char *str1="aaaaaa";
     char *str1;
@@ -127,4 +71,4 @@ int classify(char **str){
     printf("%s\n",__func__);
     return 0;
 }
-	eval() ***/
+/*** eval() ***/

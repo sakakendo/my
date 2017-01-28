@@ -47,4 +47,4 @@ ope_t cntOpe(char *exp);
 
 int cntBracket(char *exp);
 
-int digit(int n);
+//int digit(int n);
