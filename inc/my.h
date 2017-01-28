@@ -16,23 +16,28 @@ typedef struct {
     int bracket;
 }ope_t;//op
 
+//#define  printd(char *str) printf("%s %d %s",__func__,__LINE__,str);
 //prototype declation
+int dbg(/*const char *exp*/);
 int Ope(char c);
 int Ope_p(char *c);
 #define checkOpe(X) _Generic((X),char :Ope,char *: Ope_p)(X)
 
 char* home(char *str);
+/*
 int check(char *exp);
         //normal    1
         //abend     0
 
-int classify(char **str/*,char *str1*/);
+int classify(char **str);
     // classify move the current pointer
     // enum{NUM=1,OPERATION,LEFT,RIGHT};
     // **str    :target string
     // *str1    : used to debug. so it
-void eval(char *exp);
-void calc(char *exp);
+	//
+*/
+//void eval(char *exp);
+char* eval(char *exp);
 int* numify(char *exp);
 //int checkOpe(char c);
     //if character is Operation , return 1 
@@ -42,9 +47,10 @@ int returnOpe(char *exp);
     //return Operation '(',')' number
 void Insert(char *bP,char *ap,char *str);
 
-//ope_t cntOpe(char *exp,ope_t cnt);
 ope_t cntOpe(char *exp);
 
 int cntBracket(char *exp);
 
-//int digit(int n);
+
+// ----calc.c---
+char* calc(char *exp);

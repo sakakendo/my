@@ -12,16 +12,16 @@
 #include <string.h>
 #include <math.h>
 
-#include "eval.h"
-#include "my.h"
-#include "digit.h"
+#include "inc/eval.h"
+#include "inc/my.h"
+#include "inc/digit.h"
 
 int main(int argc,char *argv[]){
     char str[128];
+    printf("%s\n",argv[1]);
     sprintf(str,"(%s)",argv[1]);
-    g_len=(int)(strlen(str));
+	g_len=(int)(strlen(str));
         //length of exp
-    printf("%s length=%d\n",str,g_len);
     if(check(str)){
         //normal    1
         //abend     0
@@ -34,32 +34,22 @@ int main(int argc,char *argv[]){
     eval(str);
     return 0;
 }
-int dbg(/*const char *exp*/){
-#ifdef DBG
-	printf( "dbg mode");
-	printf( "undbg mode");
-#endif //__DBG __ 
-#ifndef DBG
-	printf( "undbg mode");
-#endif //__DBG __ 
-}
 
-void eval(char *exp){
-    int c=0,c0=0,i=0,n,l;
+char* eval(char *exp){
+	int i=0;
 	//i: length of tmp 
-    char *tmp,*endp,*result;
+	char *tmp;
 	//tmp:strings to eval
     tmp=malloc((int)strlen(exp));
     ope_t cnt=cntOpe(exp);
-    l=0; //(int)strlen(exp);
-    printf("%s\texp=%s size=%d\n",__func__,exp,l);
     while(0){
 recheck:
-//        printf("recheck\n");
         exp=home(exp);
+		printf("%s %d %s\n",__func__,__LINE__,exp);
     }
     if(cnt.bracket==0){
-        calc(exp);
+//		printf("%s line:%d exp=%s tmp=%s\n",__func__,__LINE__,exp,home(tmp));
+        return calc(exp);
     }else{
         do{
             i++;
@@ -67,8 +57,9 @@ recheck:
                 i=0;
             }
 			if(*exp==')'){
-				printf("tmp=%s\n",tmp-i+1);
-                eval(tmp-i+1);
+				*tmp='\0';
+                printf("%s line:%d %c%s%s\n",__func__,__LINE__,*(exp-i-1),eval(tmp-i+1),(exp+1));
+                Insert((exp-i),(exp),eval(tmp-i+1));
                 goto recheck;
             }
             *(tmp++)=*exp;
@@ -78,6 +69,16 @@ recheck:
     }
 }
 /*
+int dbg(){
+#ifdef DBG
+	printf( "dbg mode");
+	printf( "undbg mode");
+#endif //__DBG __ 
+#ifndef DBG
+	printf( "undbg mode");
+#endif //__DBG __ 
+}
+
 void calc(char *exp){
 //    printf("%s exp=%s\n",__func__,exp);
 //    printf("%c,%d\n",*exp,(int)strlen(exp));

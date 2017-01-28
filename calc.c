@@ -12,61 +12,72 @@
 #include <string.h>
 #include <math.h>
 
-#include "eval.h"
-#include "my.h"
-#include "digit.h"
+#include "inc/eval.h"
+#include "inc/my.h"
+#include "inc/digit.h"
 
+#ifdef __CALC__
 int main(int argc,char *argv[]){
-	calc( argv[1]);
+	char *(str[128]);
+	*str=argv[1];
+//	calc( argv[1]);
+	calc(*str);
     return 0;
 }
+#endif //__CALC__
 
-void calc(char *exp){
-//    printf("%s exp=%s\n",__func__,exp);
-//    printf("%c,%d\n",*exp,(int)strlen(exp));
-    int pri,s=0,n0,n1,tmp=0;
+char* calc(char *exp){
+	printf("func : %s %s\n",__func__,exp);
+    int pri,s=1,n0,n1,tmp=0;
 	//s : state of *exp
+	//in the number : 0 
+	//disable calculate: 1 
+	//enable calculate : 2
 	//pri : number of priority operation(*,/)          
     char *exp0;
 	char *head=exp;
-    char str[128];
-    ope_t c;//=cntope(exp); 
-        // ---stack ope then return result---
-//    while(sum && *exp){
-	while( 0){
+    char str[128]={};
+    ope_t c;
+	while(0){
 init:
 		exp=head;
-//		printf("%d head=%s\n",__line__,head);
 	}
 	c=cntOpe(exp); 
 	pri=c.multi+c.div;
-	//        printf("exp= %c\n",*exp);
 	do{
-        if(('0'<*exp  && *exp<'9') && s==0){
-            s=1;
+        if(('0'<*exp  && *exp<'9') && s!=0/*s==0 */){
+            s=0;
             exp0=exp;
             n0=atoi(exp);
         }else if(Ope(*exp)){
-            //		printf("pri=%d",pri);
-            s=0;
+            s=1;
             n1=atoi(exp+1);
             if(*exp=='*' ){
+                tmp=n0*n1;
+				s=2;
+            }else if(*exp=='/'){
                 tmp=n0/n1;
-            }else if(*exp=='+' && pri==0){
+				s=2;
+			}
+			if(*exp=='+'&& !pri){
                 tmp=n0+n1;
-            }else if(*exp=='-' && !pri){
+				s=2;
+            }else if(*exp=='-' && !pri) {
                 tmp=n0-n1;
+				s=2;
             }
-//            printf("%d %c %d = %d\n",n0,*exp,n1,tmp);
-//            printf("exp : %p  %c exp0: %p : %c n0 : %d n1 : %d\n"
-//                    ,exp,*exp,exp0,*exp0,digit(n0),digit(n1));
-            printf("insert : n0=%d n1=%d tmp=%d\n",n0,n1,tmp);
-            sprintf(str,"%d",tmp);
-            Insert(exp0-1,exp+digit(n1)+1,str);
-            printf("%s",exp0);
-			goto init;
-        }
+			//when tmp is not calucurated don't insert
+			if(s==2){
+				printf("calculation: %d %c %d= %d\n",n0,*exp,n1,tmp);
+				printf("insert : n0=%d n1=%d tmp=%d\n",n0,n1,tmp);
+				sprintf(str,"%d",tmp);
+				Insert(exp0-1,exp+digit(n1)+1,str);
+				printf("%s\n",exp0);
+				goto init;
+			}
+		}
         exp++;
     }while(c.sum && *exp);
-    //    return result;
+//	printf("%s result %s\n",__func__,head);
+	return head;
 }

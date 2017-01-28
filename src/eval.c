@@ -1,4 +1,7 @@
-#include <eval.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "../inc/my.h" 
+#include "../inc/eval.h" 
 /*** eval() ***/
 int check(char *exp){
 //    char token[128]="default";

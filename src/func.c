@@ -1,6 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "my.h"
+#include "../inc/my.h"
+
+int dbg(/*const char *exp*/){
+#ifdef DBG
+	printf( "dbg mode");
+	printf( "undbg mode");
+#endif //__DBG __ 
+#ifndef DBG
+	printf( "undbg mode");
+#endif //__DBG __ 
+}
 
 char* home(char *str){
     while(*(--str));
@@ -8,7 +18,7 @@ char* home(char *str){
     return str;
 }
 void Insert(char *bp,char *ap,char *str){
-    printf("%sbp=%cap=%cstr=%s\n",__func__,*bp,*ap,str);
+//    printf("%sbp=%cap=%cstr=%s\n",__func__,*bp,*ap,str);
     char *bp0=bp;
     bp++; while(*str){
         *(bp++)=*(str++);
@@ -17,7 +27,7 @@ void Insert(char *bp,char *ap,char *str){
         *(bp++)=*(ap++);
     }
     *bp='\0';
-    printf("Insert result : %s\n",bp0);
+//    printf("Insert result : %s\n",bp0);
 }
 int Ope_p(char *c){
     printf("%s\n",__func__);

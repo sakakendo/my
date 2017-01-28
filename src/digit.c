@@ -1,5 +1,5 @@
 #include<math.h>
-#include "digit.h"
+#include "../inc/digit.h"
 
 int digit(int n){
 	double i=1;
