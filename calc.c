@@ -12,14 +12,17 @@
 #include <string.h>
 #include <math.h>
 
-#include "eval.h"
-#include "my.h"
-#include "digit.h"
+#include "inc/eval.h"
+#include "inc/my.h"
+#include "inc/digit.h"
 
+#ifdef __CALC__
+#pragma message("calc")
 int main(int argc,char *argv[]){
 	calc( argv[1]);
     return 0;
 }
+#endif //__CALC__
 
 void calc(char *exp){
 //    printf("%s exp=%s\n",__func__,exp);

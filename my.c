@@ -12,10 +12,12 @@
 #include <string.h>
 #include <math.h>
 
-#include "eval.h"
-#include "my.h"
-#include "digit.h"
+#include "inc/eval.h"
+#include "inc/my.h"
+#include "inc/digit.h"
 
+#ifndef __CALC__
+#pragma message("calc")
 int main(int argc,char *argv[]){
     char str[128];
     sprintf(str,"(%s)",argv[1]);
@@ -34,6 +36,7 @@ int main(int argc,char *argv[]){
     eval(str);
     return 0;
 }
+#endif //__CALC__
 int dbg(/*const char *exp*/){
 #ifdef DBG
 	printf( "dbg mode");
