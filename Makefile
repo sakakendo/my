@@ -9,7 +9,7 @@ obj/my.o:$(SRC)
 	obj/my.o "1234+(2*(3+33))+(3+2)" > obj/result
 obj/calc.o:$(SRC)
 	gcc $(INC) $^ -o $@ -lm -D__CALC__
-	./$@ 1234+2
+	./$@ "(1234+2)"
 dbg:my.c func.c
 	@echo -e '\n debug mode \n'
 	gcc  -D DBG $^ -g -o $@ -lm
